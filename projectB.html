@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>이미지 슬라이더2</title>
+    <script src="./jquery-3.7.1.min.js"></script>
+    <script>
+        (function ($) {
+            $.fn.imageSlider = function (options) {
+                // 기본값 설정
+                var settings = $.extend({
+                    width: 460,
+                    height: 300
+                }, options);
+
+                // 각각의 슬라이더에 대해 작업을 수행합니다.
+                return this.each(function () {
+                    var current = 0;
+                    var width = settings.width;
+                    var height = settings.height;
+
+                    // 함수를 선언합니다.
+                    var moveTo = function () {
+                        var $images = $(this).find('.images');
+                        $images.animate({
+                            left: -current * width
+                        }, 1000);
+                    };
+
+                    // 슬라이더 내부의 이미지 개수를 확인합니다.
+                    var imageLength = $(this).find('.image').length;
+
+                    // 슬라이더 버튼을 추가합니다.
+                    for (var i = 0; i < imageLength; i++) {
+                        $('<button></button>')
+                            .attr('data-position', i)
+                            .text(i)
+                            .click(function () {
+                                current = $(this).attr('data-position');
+                                moveTo.call(this); // 함수 내에서 this를 사용하기 위해 call 사용
+                            })
+                            .insertBefore(this);
+                    }
+
+                    // 슬라이더 스타일을 설정합니다.
+                    $(this).css({
+                        position: 'relative',
+                        width: width,
+                        height: height,
+                        overflow: 'hidden'
+                    });
+
+                    $(this).find('.images').css({
+                        position: 'absolute',
+                        width: width * imageLength,
+                    });
+
+                    $(this).find('.image').css({
+                        margin: 0,
+                        padding: 0,
+                        width: width,
+                        height: height,
+                        display: 'block',
+                        float: 'left'
+                    });
+
+                    // 3초마다 슬라이더를 이동시킵니다.
+                    setInterval(function () {
+                        current = (current + 1) % imageLength;
+                        moveTo.call(this); // 함수 내에서 this를 사용하기 위해 call 사용
+                    }.bind(this), 3000); // 함수 내에서 this를 사용하기 위해 bind 사용
+                });
+            };
+        })(jQuery);
+
+        // 문서가 준비되면 호출되는 함수
+        $(document).ready(function () {
+            $('.slider').imageSlider({
+                width: 460,
+                height: 300
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="slider">
+        <div class="images">
+            <img class="image" src="https://kormedi.com/wp-content/uploads/2022/11/ck-cm270027748-l-700x467.jpg" />
+            <img class="image" src="https://news.kbs.co.kr/data/news/2021/10/18/20211018_iYfwL8.jpg" />
+            <img class="image" src="https://wemakenews.co.kr/data/tmp/2111/20211126204041_dvxuuwgm.jpg" />
+            <img class="image" src="https://i.namu.wiki/i/Mj0aArUbJiq5_c500MqmbYyDPWnSiDBCsxbesdkR0XTOtDvwrjj2ponJvctbYgQ7zPE_LvjsJHAl786rZu0tkw.webp" />
+            <div class="image">
+                <h1>이미지가 아닌 것</h1>
+                <p>Lorem ipsum dolor sit amet.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,3 +1,4 @@
+//과제1
 $.fn.imageSlider = function (object) {
     // 변수를 선언합니다.
     const width = object.width || 460;
